@@ -24,8 +24,8 @@ public class PlayWithBot : MonoBehaviour
         PlayerPrefs.SetString("Scene", SceneName);
         InitializeBoard();
         int Role = PlayerPrefs.GetInt("Role");
-        int Level = PlayerPrefs.GetInt("Level") + 1;
-        Debug.Log("Level: " + Level);
+        
+        
         level.text = "Level " + Level;
         if (Role == 1) player = -1; // O
         else if (Role == 0) player = 1; // X
@@ -43,7 +43,13 @@ public class PlayWithBot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (turn != player) BotDemo();
+        int Level = PlayerPrefs.GetInt("Level") + 1;
+        if (turn != player) {
+            if (Level == 1) BotDemo();
+            else if (Level == 2) BotDemo();
+            else BotDemo();
+        }
+        
         if (Input.GetMouseButtonDown(0))
         {            
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
