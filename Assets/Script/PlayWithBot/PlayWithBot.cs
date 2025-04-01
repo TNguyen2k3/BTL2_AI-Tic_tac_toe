@@ -26,7 +26,7 @@ public class PlayWithBot : MonoBehaviour
         int Role = PlayerPrefs.GetInt("Role");
         
         
-        level.text = "Level " + Level;
+        level.text = "Level " + level;
         if (Role == 1) player = -1; // O
         else if (Role == 0) player = 1; // X
         else {
