@@ -58,7 +58,7 @@ public class PlayWithBot : MonoBehaviour
         int Level = PlayerPrefs.GetInt("Level") + 1;
         if (turn != player) {
             if (Level == 1) {
-                BotLevel1 bot = new BotLevel1(board, turn, startPosition, cellSize, xSprite, oSprite, 8);
+                BotLevel1 bot = new BotLevel1(board, turn, startPosition, cellSize, xSprite, oSprite, 3);
                 bot.MakeMove();
                 turn = -turn;
             }

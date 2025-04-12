@@ -27,7 +27,6 @@ public class BotLevel1
     {
         int bestScore = int.MinValue;
         Vector2Int bestMove = new Vector2Int(-1, -1);
-        int maxDepth = 3;
 
         foreach (Vector2Int cell in GetEmptyCells())
         {
@@ -115,29 +114,38 @@ public class BotLevel1
         }
         return true;
     }
-    // get emptycell bang cach gioi han vung choi
+
+    // Get empty cells bằng cách giới hạn phạm vi gần các quân đã đánh
     private List<Vector2Int> GetEmptyCells()
     {
         HashSet<Vector2Int> result = new HashSet<Vector2Int>();
-        int range = 1;
+        int range = 1; // Giới hạn phạm vi ô trống xung quanh các quân đã đánh
 
+        // Duyệt qua tất cả các ô trên bàn cờ
         for (int i = 0; i < 9; i++)
+        {
             for (int j = 0; j < 9; j++)
             {
-                if (board[i, j] != 0)
+                if (board[i, j] != 0) // Nếu ô đã có quân
                 {
+                    // Kiểm tra các ô trống xung quanh
                     for (int dx = -range; dx <= range; dx++)
+                    {
                         for (int dy = -range; dy <= range; dy++)
                         {
                             int ni = i + dx;
                             int nj = j + dy;
+                            // Kiểm tra xem ô mới có hợp lệ và trống hay không
                             if (ni >= 0 && ni < 9 && nj >= 0 && nj < 9 && board[ni, nj] == 0)
+                            {
                                 result.Add(new Vector2Int(ni, nj));
+                            }
                         }
+                    }
                 }
             }
+        }
 
-        return new List<Vector2Int>(result);
+        return new List<Vector2Int>(result); // Trả về danh sách các ô trống đã được giới hạn
     }
-
 }
