@@ -45,7 +45,11 @@ public class PlayWithBot : MonoBehaviour
     {
         int Level = PlayerPrefs.GetInt("Level") + 1;
         if (turn != player) {
-            if (Level == 1) BotDemo();
+            if (Level == 1) {
+                BotLevel1 bot = new BotLevel1(board, turn, startPosition, cellSize, xSprite, oSprite, 5);
+                bot.MakeMove();
+                turn = -turn;
+            }
             else if (Level == 2) BotDemo();
             else BotDemo();
         }
@@ -71,6 +75,7 @@ public class PlayWithBot : MonoBehaviour
             }
         }
     }
+
     void BotDemo()
     {
         List<Vector2Int> emptyCells = new List<Vector2Int>();
