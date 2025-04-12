@@ -23,30 +23,42 @@ public class PlayWithBot : MonoBehaviour
     {
         PlayerPrefs.SetString("Scene", SceneName);
         InitializeBoard();
-        int Role = PlayerPrefs.GetInt("Role");
-        
-        
-        level.text = "Level " + level;
-        if (Role == 1) player = -1; // O
-        else if (Role == 0) player = 1; // X
-        else {
-            float random = Random.Range(0, 1);
-            if (random < 0.5) player = -1; // O
-            else player = 1; // X
-        }
-        float randomTurn = Random.Range(0f, 1f);
-        Debug.Log(randomTurn);
-        if (randomTurn < 0.5) turn = player;
-        else turn = -player;
 
+        int Role = PlayerPrefs.GetInt("Role");  // 0 = X, 1 = O, 2 = random
+
+        level.text = "Level " + (PlayerPrefs.GetInt("Level") + 1);
+
+        // Xác định vai trò người chơi
+        if (Role == 0) player = 1; // X
+        else if (Role == 1) player = -1; // O
+        else {
+            float random = Random.Range(0f, 1f);  // tránh lỗi Random.Range(int, int)
+            player = (random < 0.5f) ? -1 : 1;
+        }
+
+        turn = 1; // X luôn đi trước
+
+        // Nếu người chơi là O → bot đi trước
+        if (player == -1)
+        {
+            int centerX = 4;
+            int centerY = 4;
+            Vector2 centerPosition = new Vector2(startPosition.x + centerX * cellSize, startPosition.y - centerY * cellSize);
+            Instantiate(xSprite, centerPosition, Quaternion.identity);
+            board[centerX, centerY] = 1; // X
+
+            turn = -turn; // Sau khi bot đi, đến lượt người chơi
+        }
     }
+
+
     // Update is called once per frame
     void Update()
     {
         int Level = PlayerPrefs.GetInt("Level") + 1;
         if (turn != player) {
             if (Level == 1) {
-                BotLevel1 bot = new BotLevel1(board, turn, startPosition, cellSize, xSprite, oSprite, 5);
+                BotLevel1 bot = new BotLevel1(board, turn, startPosition, cellSize, xSprite, oSprite, 8);
                 bot.MakeMove();
                 turn = -turn;
             }
