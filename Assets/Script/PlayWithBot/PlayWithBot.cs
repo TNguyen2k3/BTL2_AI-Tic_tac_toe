@@ -51,17 +51,21 @@ public class PlayWithBot : MonoBehaviour
         }
     }
 
-
+    
     // Update is called once per frame
     void Update()
     {
         int Level = PlayerPrefs.GetInt("Level") + 1;
         if (turn != player) {
-            if (Level == 1) {
+            if (Level == 1) 
+            {
+                // int movesCount = CountMoves();
+                // int adaptiveDepth = Mathf.Clamp(5 + movesCount / 10, 5, 7);
                 BotLevel1 bot = new BotLevel1(board, turn, startPosition, cellSize, xSprite, oSprite, 3);
                 bot.MakeMove();
                 turn = -turn;
             }
+
             else if (Level == 2) BotDemo();
             else BotDemo();
         }
@@ -86,6 +90,21 @@ public class PlayWithBot : MonoBehaviour
                 SceneManager.LoadScene("FinishedScene");
             }
         }
+    }
+    int CountMoves()
+    {
+        int count = 0;
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                if (board[i, j] != 0)
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     void BotDemo()
