@@ -11,8 +11,8 @@ public class BotLevel1
     private GameObject oSprite;
     private int maxDepth;
     private const int winLength = 5;
-    private const int winScore = 100000;
-    private const int fourInRowScore = 10000;
+    private const int winScore = 1000000;
+    private const int fourInRowScore = 100000;
     private const int threeInRowScore = 1000;
     private const int twoInRowScore = 100;
 
@@ -200,49 +200,62 @@ public class BotLevel1
 
     private List<Vector2Int> GetEmptyCells(int[,] boardState = null)
     {
-        boardState = boardState ?? board;
-        HashSet<Vector2Int> result = new HashSet<Vector2Int>();
-        int range = 2; // Increased search range
+        // Use the provided boardState or the default board
+        var currentBoard = boardState ?? board;
+        var result = new HashSet<Vector2Int>();
+        int range = 2; 
 
-        // If board is empty, return center position
+        // --- Optimization 1: Handle Empty Board ---
+        // Check if the board is empty. We still need to iterate, but can exit early.
         bool boardEmpty = true;
         for (int i = 0; i < 9; i++)
         {
             for (int j = 0; j < 9; j++)
             {
-                if (boardState[i, j] != 0)
+                if (currentBoard[i, j] != 0)
                 {
                     boardEmpty = false;
-                    break;
+                    break; // Found a piece, board is not empty
                 }
             }
-            if (!boardEmpty) break;
+            if (!boardEmpty) break; // Exit outer loop if board is not empty
         }
 
         if (boardEmpty)
         {
-            result.Add(new Vector2Int(4, 4)); // Center position
+            // Return only the center position if the board is empty
+            result.Add(new Vector2Int(4, 4)); 
             return new List<Vector2Int>(result);
         }
 
-        // Search around existing pieces
+        // --- Optimization 2: Search around existing pieces efficiently ---
+        // Iterate through the entire board to find pieces
         for (int i = 0; i < 9; i++)
         {
             for (int j = 0; j < 9; j++)
             {
-                if (boardState[i, j] != 0)
+                // If the cell contains a piece
+                if (currentBoard[i, j] != 0)
                 {
-                    // Check surrounding cells
+                    // Check surrounding cells within the specified range
                     for (int di = -range; di <= range; di++)
                     {
                         for (int dj = -range; dj <= range; dj++)
                         {
+                            // Calculate neighbor coordinates
                             int ni = i + di;
                             int nj = j + dj;
-                
-                            if (ni >= 0 && ni < 9 && nj >= 0 && nj < 9 && boardState[ni, nj] == 0)
+
+                            // Check if the neighbor is within board bounds (0-8)
+                            if (ni >= 0 && ni < 9 && nj >= 0 && nj < 9)
                             {
-                                result.Add(new Vector2Int(ni, nj));
+                                // Check if the neighbor cell is empty
+                                if (currentBoard[ni, nj] == 0)
+                                {
+                                    // Add the empty cell's coordinates to the result set.
+                                    // HashSet automatically handles duplicates.
+                                    result.Add(new Vector2Int(ni, nj));
+                                }
                             }
                         }
                     }
@@ -250,6 +263,8 @@ public class BotLevel1
             }
         }
 
+        // Convert the HashSet to a List and return
         return new List<Vector2Int>(result);
     }
+
 }
