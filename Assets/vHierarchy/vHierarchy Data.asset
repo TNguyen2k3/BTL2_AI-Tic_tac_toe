@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a9752b0c8e144801967e6897679604b, type: 3}
+  m_Name: vHierarchy Data
+  m_EditorClassIdentifier: 
+  sceneDatas_byGuid:
+    keys:
+    - 60a112e6689f1d44caf1fabc35e3ef2b
+    - 43e0ec11e0f002a479a79afcf689436b
+    - 1b2a0d29c6117854b8b6d975a34134c0
+    - a9c8c925c00ba8644809fb5c97287c68
+    - 173bc972a90c82c468e20575a40079d2
+    - 30cbfd26002e4d64b9becc0b6c6b1977
+    values:
+    - goDatas_byGlobalId:
+        keys:
+        - globalObjectIdString: GlobalObjectId_V1-2-60a112e6689f1d44caf1fabc35e3ef2b-999056620-0
+        - globalObjectIdString: GlobalObjectId_V1-2-60a112e6689f1d44caf1fabc35e3ef2b-1396907921-0
+        - globalObjectIdString: GlobalObjectId_V1-2-60a112e6689f1d44caf1fabc35e3ef2b-2128585430-0
+        - globalObjectIdString: GlobalObjectId_V1-2-60a112e6689f1d44caf1fabc35e3ef2b-1757774654-0
+        - globalObjectIdString: GlobalObjectId_V1-2-60a112e6689f1d44caf1fabc35e3ef2b-160620704-0
+        values:
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+    - goDatas_byGlobalId:
+        keys:
+        - globalObjectIdString: GlobalObjectId_V1-2-43e0ec11e0f002a479a79afcf689436b-999056620-0
+        - globalObjectIdString: GlobalObjectId_V1-2-43e0ec11e0f002a479a79afcf689436b-1757774654-0
+        - globalObjectIdString: GlobalObjectId_V1-2-43e0ec11e0f002a479a79afcf689436b-2128585430-0
+        - globalObjectIdString: GlobalObjectId_V1-2-43e0ec11e0f002a479a79afcf689436b-1396907921-0
+        - globalObjectIdString: GlobalObjectId_V1-2-43e0ec11e0f002a479a79afcf689436b-1891644197-0
+        - globalObjectIdString: GlobalObjectId_V1-2-43e0ec11e0f002a479a79afcf689436b-474277914-0
+        values:
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+    - goDatas_byGlobalId:
+        keys:
+        - globalObjectIdString: GlobalObjectId_V1-2-1b2a0d29c6117854b8b6d975a34134c0-1757774654-0
+        - globalObjectIdString: GlobalObjectId_V1-2-1b2a0d29c6117854b8b6d975a34134c0-999056620-0
+        - globalObjectIdString: GlobalObjectId_V1-2-1b2a0d29c6117854b8b6d975a34134c0-2128585430-0
+        values:
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: Folder Icon
+    - goDatas_byGlobalId:
+        keys: []
+        values: []
+    - goDatas_byGlobalId:
+        keys: []
+        values: []
+    - goDatas_byGlobalId:
+        keys: []
+        values: []
