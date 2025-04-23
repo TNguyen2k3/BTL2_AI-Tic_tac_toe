@@ -9,10 +9,10 @@ EditorBuildSettings:
     path: Assets/Scenes/Home.unity
     guid: 8c209932bc1a53c4e9aa6431a2ef1604
   - enabled: 1
-    path: Assets/Scenes/Play alone.unity
+    path: Assets/Scenes/PlayAlone.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Play with bot.unity
+    path: Assets/Scenes/PlayWithBot.unity
     guid: 9be4af72475987242911348550e86ed1
   - enabled: 1
     path: Assets/Scenes/ChooseLevel.unity

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+
 public class PlayWithBot : MonoBehaviour
 {
     [SerializeField] TMP_Text level;
@@ -18,7 +19,7 @@ public class PlayWithBot : MonoBehaviour
     public bool isFinished = false;
     public int player;
     public string SceneName;
-    // Start is called before the first frame update
+
     void Start()
     {
         PlayerPrefs.SetString("Scene", SceneName);
@@ -56,8 +57,18 @@ public class PlayWithBot : MonoBehaviour
     void Update()
     {
         int Level = PlayerPrefs.GetInt("Level") + 1;
-        if (turn != player) {
-            if (Level == 1) 
+        if (turn != player) 
+        {
+            if (Level == 1)
+            {
+                IBotStrategy bot = new MinimaxBot((int)Random.Range(2, 3));
+                Vector2Int move = bot.GetNextMove(board, turn);
+                Vector2 piecePosition = new Vector2(startPosition.x + move.x * cellSize, startPosition.y - move.y * cellSize);
+                Instantiate(turn == 1 ? xSprite : oSprite, piecePosition, Quaternion.identity);
+                board[move.x, move.y] = turn;
+                turn = -turn;
+            }
+            else if (Level == 2) 
             {
                 // int movesCount = CountMoves();
                 // int adaptiveDepth = Mathf.Clamp(5 + movesCount / 10, 5, 7);
@@ -65,9 +76,8 @@ public class PlayWithBot : MonoBehaviour
                 bot.MakeMove();
                 turn = -turn;
             }
-
-            else if (Level == 2) BotDemo();
             else BotDemo();
+            
         }
         
         if (Input.GetMouseButtonDown(0))
@@ -75,14 +85,21 @@ public class PlayWithBot : MonoBehaviour
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (turn == player) PlacePiece(mousePosition);
         }
-        CheckWinCondition();
-            
-        if (result != 0) {
+
+        CheckWinCondition(); 
+        if (result != 0) 
+        {
             PlayerPrefs.SetInt("Result", result);
             PlayerPrefs.Save(); // Lưu thay đổi ngay lập tức
             SceneManager.LoadScene("FinishedScene");
+            if (result > 0)
+                Debug.Log("X is the Winner!");
+            else
+                Debug.Log("O is the Winner!");
+
         }
-        else{
+        else
+        {
             CheckDraw();
             if (isFinished) {
                 PlayerPrefs.SetInt("Result", result);
@@ -90,6 +107,7 @@ public class PlayWithBot : MonoBehaviour
                 SceneManager.LoadScene("FinishedScene");
             }
         }
+
     }
     int CountMoves()
     {

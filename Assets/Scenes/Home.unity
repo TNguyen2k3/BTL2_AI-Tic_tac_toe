@@ -1780,7 +1780,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73d898742a45a70408a1d0f9bee98b0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Play alone
+  sceneName: PlayAlone
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
