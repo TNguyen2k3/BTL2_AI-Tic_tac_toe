@@ -76,9 +76,19 @@ public class PlayWithBot : MonoBehaviour
                 bot.MakeMove();
                 turn = -turn;
             }
+             else if (Level == 3)
+        {
+            IBotStrategy bot = new AdvancedBot(400, 8); // 400ms max time, 8
+            Vector2Int move = bot.GetNextMove(board, turn);
+            Vector2 piecePosition = new Vector2(startPosition.x + move.x * cellSize, startPosition.y - move.y * cellSize);
+            Instantiate(turn == 1 ? xSprite : oSprite, piecePosition, Quaternion.identity);
+            board[move.x, move.y] = turn;
+            turn = -turn;
+        }
             else BotDemo();
             
         }
+
         
         if (Input.GetMouseButtonDown(0))
         {            
