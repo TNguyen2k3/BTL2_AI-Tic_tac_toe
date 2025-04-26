@@ -1,0 +1,62 @@
+{
+    "bots": [
+        {
+            "botName": "Level 2",
+            "enemiesList": [
+                {
+                    "enemyName": "Level 0",
+                    "win": 0,
+                    "lose": 0,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 1",
+                    "win": 0,
+                    "lose": 0,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 2",
+                    "win": 0,
+                    "lose": 0,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 3",
+                    "win": 0,
+                    "lose": 1,
+                    "draw": 0
+                }
+            ]
+        },
+        {
+            "botName": "Level 3",
+            "enemiesList": [
+                {
+                    "enemyName": "Level 0",
+                    "win": 0,
+                    "lose": 0,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 1",
+                    "win": 0,
+                    "lose": 0,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 2",
+                    "win": 1,
+                    "lose": 0,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 3",
+                    "win": 0,
+                    "lose": 0,
+                    "draw": 0
+                }
+            ]
+        }
+    ]
+}
