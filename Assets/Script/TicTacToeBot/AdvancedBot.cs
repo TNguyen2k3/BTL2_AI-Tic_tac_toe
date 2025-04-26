@@ -634,7 +634,7 @@ public class AdvancedBot : IBotStrategy
         }
         
         return true; 
-    
+    }
     private Vector2Int? FindWinningMove(int[,] board, int player)
     {
         for (int i = 0; i < 9; i++)

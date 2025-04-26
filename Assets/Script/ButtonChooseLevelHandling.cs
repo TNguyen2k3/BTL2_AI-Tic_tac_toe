@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class ButtonChooseLevelHandling : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -19,6 +20,14 @@ public class ButtonChooseLevelHandling : MonoBehaviour
         if (SceneName == null) return;
         if (SceneName == "Play alone") {
             ChooseLevelButton.gameObject.SetActive(false);
+        }
+    }
+    public void OnButtonClicked(){
+        if (SceneName == "PlayWithBot"){
+            SceneManager.LoadScene("ChooseLevel");
+        }
+        else if (SceneName == "BotVSBot"){
+            SceneManager.LoadScene("ChooseBots");
         }
     }
 }
