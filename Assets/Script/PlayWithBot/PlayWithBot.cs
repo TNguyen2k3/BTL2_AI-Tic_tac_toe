@@ -61,7 +61,7 @@ public class PlayWithBot : MonoBehaviour
         {
             if (Level == 1)
             {
-                IBotStrategy bot = new MinimaxBot((int)Random.Range(2, 3));
+                IBotStrategy bot = new MinimaxBot((int)Random.Range(2, 4));
                 Vector2Int move = bot.GetNextMove(board, turn);
                 Vector2 piecePosition = new Vector2(startPosition.x + move.x * cellSize, startPosition.y - move.y * cellSize);
                 Instantiate(turn == 1 ? xSprite : oSprite, piecePosition, Quaternion.identity);

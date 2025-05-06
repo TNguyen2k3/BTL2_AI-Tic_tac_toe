@@ -19,7 +19,7 @@ public class MinimaxBot : IBotStrategy
         foreach (var move in moves)
         {
             board[move.x, move.y] = turn; //Giả lập quân -> Đánh dấu ô này đã được đi quân X hay O (1 hay -1)
-            int score = Minimax(board, maxDepth, int.MinValue, int.MaxValue, false, turn);
+            int score = Minimax(board, maxDepth, false, turn);
             board[move.x, move.y] = 0; //Bỏ đánh dấu
 
             if (score > bestScore)
@@ -32,7 +32,7 @@ public class MinimaxBot : IBotStrategy
         return bestMove;
     }
 
-    private int Minimax(int[,] board, int depth, int alpha, int beta, bool isMaximizing, int player)
+    private int Minimax(int[,] board, int depth, bool isMaximizing, int player)
     {
         int winner = CheckWin(board);
         if (winner == player) return 100000;
@@ -45,21 +45,13 @@ public class MinimaxBot : IBotStrategy
         foreach (var move in moves)
         {
             board[move.x, move.y] = isMaximizing ? player : -player;
-            int score = Minimax(board, depth - 1, alpha, beta, !isMaximizing, player);
+            int score = Minimax(board, depth - 1, !isMaximizing, player);
             board[move.x, move.y] = 0;
 
             if (isMaximizing)
-            {
                 best = Mathf.Max(best, score);
-                alpha = Mathf.Max(alpha, best);
-                if (beta <= alpha) break;
-            }
             else
-            {
                 best = Mathf.Min(best, score);
-                beta = Mathf.Min(beta, best);
-                if (beta <= alpha) break;
-            }
         }
 
         return best;
