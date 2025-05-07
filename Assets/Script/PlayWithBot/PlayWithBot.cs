@@ -59,7 +59,7 @@ public class PlayWithBot : MonoBehaviour
                 board[move.x, move.y] = turn;
                 turn = -turn;
             }
-            else if (Level == 2) 
+            else if (Level == 3) 
             {
                 // int movesCount = CountMoves();
                 // int adaptiveDepth = Mathf.Clamp(5 + movesCount / 10, 5, 7);
@@ -67,7 +67,7 @@ public class PlayWithBot : MonoBehaviour
                 bot.MakeMove();
                 turn = -turn;
             }
-            else if (Level == 3)
+            else if (Level == 2)
             {
                 IBotStrategy bot = new AdvancedBot(400, 8); // 400ms max time, 8
                 Vector2Int move = bot.GetNextMove(board, turn);
