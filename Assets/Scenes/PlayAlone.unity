@@ -1801,8 +1801,8 @@ Transform:
   m_GameObject: {fileID: 509291981}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.2, y: -7, z: -0.11993868}
-  m_LocalScale: {x: 50, y: 30, z: 1}
+  m_LocalPosition: {x: -7.7431, y: -8.0787, z: -0.11993868}
+  m_LocalScale: {x: 63.783447, y: 36.472816, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2001,7 +2001,7 @@ MonoBehaviour:
   isXTurn: 1
   result: 0
   isFinished: 0
-  SceneName: Play alone
+  SceneName: PlayAlone
 --- !u!1 &594523502
 GameObject:
   m_ObjectHideFlags: 0

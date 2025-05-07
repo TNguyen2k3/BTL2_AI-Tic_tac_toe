@@ -1316,9 +1316,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1867910804}
-        m_TargetAssemblyTypeName: Go_to_a_scene, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 1867910810}
+        m_TargetAssemblyTypeName: ButtonChooseLevelHandling, Assembly-CSharp
+        m_MethodName: OnButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

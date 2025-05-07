@@ -37,19 +37,10 @@ public class PlayWithBot : MonoBehaviour
             player = (random < 0.5f) ? -1 : 1;
         }
 
-        turn = 1; // X luôn đi trước
+        float random1 = Random.Range(0f, 1f);  // tránh lỗi Random.Range(int, int)
+        turn = (random1 < 0.5f) ? -1 : 1;
 
-        // Nếu người chơi là O → bot đi trước
-        if (player == -1)
-        {
-            int centerX = 4;
-            int centerY = 4;
-            Vector2 centerPosition = new Vector2(startPosition.x + centerX * cellSize, startPosition.y - centerY * cellSize);
-            Instantiate(xSprite, centerPosition, Quaternion.identity);
-            board[centerX, centerY] = 1; // X
-
-            turn = -turn; // Sau khi bot đi, đến lượt người chơi
-        }
+        
     }
 
     

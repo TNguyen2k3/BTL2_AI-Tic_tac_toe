@@ -18,7 +18,7 @@ public class ButtonChooseLevelHandling : MonoBehaviour
     void Update()
     {
         if (SceneName == null) return;
-        if (SceneName == "Play alone") {
+        if (SceneName == "PlayAlone") {
             ChooseLevelButton.gameObject.SetActive(false);
         }
     }
