@@ -33,11 +33,11 @@ public class PlayWithBot : MonoBehaviour
         if (Role == 0) player = 1; // X
         else if (Role == 1) player = -1; // O
         else {
-            float random = Random.Range(0f, 1f);  // tránh lỗi Random.Range(int, int)
+            float random = Random.Range(0f, 1f);
             player = (random < 0.5f) ? -1 : 1;
         }
 
-        float random1 = Random.Range(0f, 1f);  // tránh lỗi Random.Range(int, int)
+        float random1 = Random.Range(0f, 1f);
         turn = (random1 < 0.5f) ? -1 : 1;
 
         
@@ -52,7 +52,8 @@ public class PlayWithBot : MonoBehaviour
         {
             if (Level == 1)
             {
-                IBotStrategy bot = new MinimaxBot((int)Random.Range(2, 4));
+                int depth = (int)Random.Range(1, 3); //return 1, 2 only
+                IBotStrategy bot = new MinimaxBot(depth); //Debug.Log("Depth: " + depth);
                 Vector2Int move = bot.GetNextMove(board, turn);
                 Vector2 piecePosition = new Vector2(startPosition.x + move.x * cellSize, startPosition.y - move.y * cellSize);
                 Instantiate(turn == 1 ? xSprite : oSprite, piecePosition, Quaternion.identity);
@@ -91,7 +92,7 @@ public class PlayWithBot : MonoBehaviour
         if (result != 0) 
         {
             PlayerPrefs.SetInt("Result", result);
-            PlayerPrefs.Save(); // Lưu thay đổi ngay lập tức
+            PlayerPrefs.Save();
             SceneManager.LoadScene("FinishedScene");
             if (result > 0)
                 Debug.Log("X is the Winner!");
@@ -104,7 +105,7 @@ public class PlayWithBot : MonoBehaviour
             CheckDraw();
             if (isFinished) {
                 PlayerPrefs.SetInt("Result", result);
-                PlayerPrefs.Save(); // Lưu thay đổi ngay lập tức
+                PlayerPrefs.Save();
                 SceneManager.LoadScene("FinishedScene");
             }
         }
