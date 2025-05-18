@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class BotLevel1
 {
+    public Vector2Int bestMove;
     private int[,] board;
     private int turn;
     private Vector2 startPosition;
@@ -41,7 +42,7 @@ public class BotLevel1
         }
 
         int bestScore = int.MinValue;
-        Vector2Int bestMove = emptyCells[0];
+        bestMove = emptyCells[0];
         int sameScoreCount = 0;
 
         foreach (Vector2Int cell in emptyCells)

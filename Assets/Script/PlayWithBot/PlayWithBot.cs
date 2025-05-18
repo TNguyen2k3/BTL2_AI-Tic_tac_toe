@@ -4,13 +4,30 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
+[System.Serializable]
+public class MoveLog
+{
+    public int[,] board;
+    public int player; // 1 = X, -1 = O
+    public int x;
+    public int y;
+}
+
+[System.Serializable]
+public class Wrapper
+{
+    public MoveLog[] moves;
+    public int gameResult; // 1 thắng, -1 thua, 0 hòa
+    public int botRole; // 1 X, -1 O
+}
+
 public class PlayWithBot : MonoBehaviour
 {
     [SerializeField] TMP_Text level;
 
     public GameObject xSprite;
     public GameObject oSprite;
-    // 1 is X, 2 is O, 0 is nothing
+    // 1 is X, -1 is O, 0 is nothing
     private int[,] board = new int[9, 9];
     public int turn;
     private Vector2 startPosition = new Vector2(-16, 0);
@@ -19,6 +36,7 @@ public class PlayWithBot : MonoBehaviour
     public bool isFinished = false;
     public int player;
     public string SceneName;
+    private List<MoveLog> moveLogs = new List<MoveLog>();
 
     void Start()
     {
@@ -32,7 +50,8 @@ public class PlayWithBot : MonoBehaviour
         // Xác định vai trò người chơi
         if (Role == 0) player = 1; // X
         else if (Role == 1) player = -1; // O
-        else {
+        else
+        {
             float random = Random.Range(0f, 1f);
             player = (random < 0.5f) ? -1 : 1;
         }
@@ -40,15 +59,15 @@ public class PlayWithBot : MonoBehaviour
         float random1 = Random.Range(0f, 1f);
         turn = (random1 < 0.5f) ? -1 : 1;
 
-        
+
     }
 
-    
+
     // Update is called once per frame
     void Update()
     {
         int Level = PlayerPrefs.GetInt("Level") + 1;
-        if (turn != player) 
+        if (turn != player)
         {
             if (Level == 1)
             {
@@ -60,7 +79,7 @@ public class PlayWithBot : MonoBehaviour
                 board[move.x, move.y] = turn;
                 turn = -turn;
             }
-            else if (Level == 3) 
+            else if (Level == 3)
             {
                 // int movesCount = CountMoves();
                 // int adaptiveDepth = Mathf.Clamp(5 + movesCount / 10, 5, 7);
@@ -77,20 +96,26 @@ public class PlayWithBot : MonoBehaviour
                 board[move.x, move.y] = turn;
                 turn = -turn;
             }
+            else if (Level == 4)
+            {
+                // trained bot
+                BotDemo();
+            }
             else BotDemo();
-            
+
         }
 
-        
+
         if (Input.GetMouseButtonDown(0))
-        {            
+        {
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (turn == player) PlacePiece(mousePosition);
         }
 
-        CheckWinCondition(); 
-        if (result != 0) 
-        {
+        CheckWinCondition();
+        if (result != 0)
+        {   
+
             PlayerPrefs.SetInt("Result", result);
             PlayerPrefs.Save();
             SceneManager.LoadScene("FinishedScene");
@@ -103,14 +128,37 @@ public class PlayWithBot : MonoBehaviour
         else
         {
             CheckDraw();
-            if (isFinished) {
+            if (isFinished)
+            {
                 PlayerPrefs.SetInt("Result", result);
                 PlayerPrefs.Save();
                 SceneManager.LoadScene("FinishedScene");
             }
         }
-
+        if (isFinished) SaveMatchLog();
     }
+    void LogMove(int[,] boardState, int player, int x, int y)
+    {
+        int[,] boardCopy = (int[,])boardState.Clone(); // tránh tham chiếu
+        MoveLog log = new MoveLog
+        {
+            board = boardCopy,
+            player = player,
+            x = x,
+            y = y
+        };
+        moveLogs.Add(log);
+    }
+    void SaveMatchLog()
+    {
+        int gameResult = result == 0 ? 0 : (result == player ? -1 : 1);
+        string json = JsonUtility.ToJson(new Wrapper { moves = moveLogs.ToArray(), botRole = -player, gameResult = gameResult}, true);
+        string path = Application.dataPath + "/LearnData" + "/match_log_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".json";
+        System.IO.File.WriteAllText(path, json);
+        Debug.Log("Saved match log to: " + path);
+    }
+
+
     int CountMoves()
     {
         int count = 0;
@@ -136,7 +184,7 @@ public class PlayWithBot : MonoBehaviour
         {
             for (int j = 0; j < 9; j++)
             {
-                if (board[i, j] == 0) 
+                if (board[i, j] == 0)
                 {
                     emptyCells.Add(new Vector2Int(i, j));
                 }
@@ -147,14 +195,14 @@ public class PlayWithBot : MonoBehaviour
         {
             // Chọn một ô trống ngẫu nhiên
             Vector2Int move = emptyCells[Random.Range(0, emptyCells.Count)];
-            
+
             // Chuyển đổi vị trí sang tọa độ trong game
             Vector2 piecePosition = new Vector2(startPosition.x + move.x * cellSize, startPosition.y - move.y * cellSize);
-            
+
             // Đặt quân cờ
             GameObject piece = Instantiate(turn == 1 ? xSprite : oSprite, piecePosition, Quaternion.identity);
             board[move.x, move.y] = (turn == 1 ? 1 : -1);
-
+            if (PlayerPrefs.GetInt("Level") + 1 == 4) LogMove(board, turn == 1 ? 1 : -1, move.x, move.y);
             // Đổi lượt
             turn = -turn;
         }
@@ -165,10 +213,11 @@ public class PlayWithBot : MonoBehaviour
         int yIndex = Mathf.RoundToInt((startPosition.y - position.y) / cellSize);
         if (xIndex >= 0 && xIndex < 9 && yIndex >= 0 && yIndex < 9 && board[xIndex, yIndex] == 0)
         {
-            GameObject piece = Instantiate(turn == 1 ? xSprite : oSprite, 
-                new Vector2(startPosition.x + xIndex * cellSize, startPosition.y - yIndex * cellSize), 
+            GameObject piece = Instantiate(turn == 1 ? xSprite : oSprite,
+                new Vector2(startPosition.x + xIndex * cellSize, startPosition.y - yIndex * cellSize),
                 Quaternion.identity);
             board[xIndex, yIndex] = (turn == 1 ? 1 : -1);
+            LogMove(board, turn == 1 ? 1 : -1, xIndex, yIndex);
             turn = -turn;
         }
     }
@@ -182,10 +231,13 @@ public class PlayWithBot : MonoBehaviour
             }
         }
     }
-    void CheckDraw(){
-        for (int i = 0; i < 9; i++){
-            for (int j = 0; j < 9; j++){
-                
+    void CheckDraw()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+
                 if (board[i, j] == 0) return;
             }
         }
@@ -197,13 +249,13 @@ public class PlayWithBot : MonoBehaviour
     void CheckWinCondition()
     {
         int winLength = 5; // Số quân cần để thắng (Caro thường là 5)
-        
+
         // Duyệt qua toàn bộ bàn cờ
         for (int i = 0; i < 9; i++)
         {
             for (int j = 0; j < 9; j++)
             {
-                
+
                 int player = board[i, j]; // Lấy giá trị ô hiện tại (1 = X, 2 = O)
 
                 if (player == 0) continue; // Nếu ô trống, bỏ qua
@@ -228,7 +280,7 @@ public class PlayWithBot : MonoBehaviour
     bool CheckDirection(int x, int y, int dx, int dy, int player, int winLength)
     {
         int count = 0;
-        
+
         for (int k = 0; k < winLength; k++)
         {
             int nx = x + k * dx;
@@ -245,7 +297,7 @@ public class PlayWithBot : MonoBehaviour
             count++;
             // Debug.Log(count);
         }
-       
+
         return count == winLength;
     }
 }

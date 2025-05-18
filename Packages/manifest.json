@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.barracuda": "3.0.0",
     "com.unity.feature.2d": "2.0.0",
     "com.unity.textmeshpro": "3.0.9",
     "com.unity.visualscripting": "1.9.6",

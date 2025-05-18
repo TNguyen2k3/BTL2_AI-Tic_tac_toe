@@ -26,6 +26,12 @@
                     "win": 0,
                     "lose": 1,
                     "draw": 0
+                },
+                {
+                    "enemyName": "Level 4",
+                    "win": 2,
+                    "lose": 0,
+                    "draw": 0
                 }
             ]
         },
@@ -34,7 +40,7 @@
             "enemiesList": [
                 {
                     "enemyName": "Level 0",
-                    "win": 10,
+                    "win": 11,
                     "lose": 0,
                     "draw": 0
                 },
@@ -53,6 +59,12 @@
                 {
                     "enemyName": "Level 3",
                     "win": 0,
+                    "lose": 0,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 4",
+                    "win": 171,
                     "lose": 0,
                     "draw": 0
                 }
@@ -82,7 +94,13 @@
                 {
                     "enemyName": "Level 3",
                     "win": 0,
-                    "lose": 10,
+                    "lose": 11,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 4",
+                    "win": 7,
+                    "lose": 16,
                     "draw": 0
                 }
             ]
@@ -110,6 +128,47 @@
                 },
                 {
                     "enemyName": "Level 3",
+                    "win": 0,
+                    "lose": 0,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 4",
+                    "win": 14,
+                    "lose": 0,
+                    "draw": 0
+                }
+            ]
+        },
+        {
+            "botName": "Level 4",
+            "enemiesList": [
+                {
+                    "enemyName": "Level 0",
+                    "win": 16,
+                    "lose": 7,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 1",
+                    "win": 0,
+                    "lose": 14,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 2",
+                    "win": 0,
+                    "lose": 2,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 3",
+                    "win": 0,
+                    "lose": 171,
+                    "draw": 0
+                },
+                {
+                    "enemyName": "Level 4",
                     "win": 0,
                     "lose": 0,
                     "draw": 0

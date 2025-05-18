@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Unity.Barracuda;
 [System.Serializable]
 public class Trophy
 {
@@ -34,7 +35,9 @@ public class Bot
         enemiesList.Add(new Trophy("Level 1"));
         enemiesList.Add(new Trophy("Level 2"));
         enemiesList.Add(new Trophy("Level 3"));
+        enemiesList.Add(new Trophy("Level 4"));
     }
+    
 
     public void UpdateResult(string enemyLevel, int isWin)
     {
@@ -56,6 +59,8 @@ public class BotListWrapper
 }
 public class BotVSBot : MonoBehaviour
 {
+    public NNModel dqnModelAsset;
+    private DQNBot dqnBot;
     Bot Xbot;
     Bot Obot;
 
@@ -72,32 +77,31 @@ public class BotVSBot : MonoBehaviour
     public bool isFinished = false;
     public int player;
     public string SceneName;
+    private bool isLearned = false;
+    private List<MoveLog> moveLogs = new List<MoveLog>();
+    // Chuyển trạng thái bàn cờ hiện tại thành mảng float[81]
+    float[] boardState = new float[81];
 
+    void OnDestroy()
+    {
+        dqnBot?.Dispose();
+    }
     // Start is called before the first frame update
     void Start()
     {
         Xbot = new Bot("Level " + (PlayerPrefs.GetInt("XBotLevel")).ToString());
         Obot = new Bot("Level " + (PlayerPrefs.GetInt("OBotLevel")).ToString());
-        // Giả sử Bot A thắng Medium 2 lần
-        // Xbot.UpdateResult(Obot.botName, true);
-        // Xbot.UpdateResult(Obot.botName, true);
-        // Obot.UpdateResult(Xbot.botName, false);
-        // Obot.UpdateResult(Xbot.botName, false);
+        if (Xbot.botName == "Level 4" || Obot.botName == "Level 4")
+        {
+            isLearned = true;
+            dqnBot = new DQNBot(dqnModelAsset);
+        }
         PlayerPrefs.SetString("Scene", SceneName);
         InitializeBoard();
 
         int Role = PlayerPrefs.GetInt("Role");  // 0 = X, 1 = O, 2 = random
-
-        
-
-        
         float random = Random.Range(0f, 1f);  // tránh lỗi Random.Range(int, int)
         turn = (random < 0.5f) ? -1 : 1;
-        
-
-        
-        // Lưu botA ra file
-        
     }
 
     // Update is called once per frame
@@ -106,6 +110,17 @@ public class BotVSBot : MonoBehaviour
         string Level;
         if (turn == 1) Level = Xbot.botName;
         else Level = Obot.botName;
+        for (int x = 0; x < 9; x++)
+        {
+            for (int y = 0; y < 9; y++)
+            {
+                int index = x * 9 + y;
+                if (board[x, y] == 1) boardState[index] = 1f;       // Bot
+                else if (board[x, y] == -1) boardState[index] = -1f; // Người chơi
+                else boardState[index] = 0f;                         // Ô trống
+            }
+        }
+        
         if (Level == "Level 1")
         {
             IBotStrategy bot = new MinimaxBot((int)Random.Range(2, 3));
@@ -113,14 +128,16 @@ public class BotVSBot : MonoBehaviour
             Vector2 piecePosition = new Vector2(startPosition.x + move.x * cellSize, startPosition.y - move.y * cellSize);
             Instantiate(turn == 1 ? xSprite : oSprite, piecePosition, Quaternion.identity);
             board[move.x, move.y] = turn;
+            if (isLearned) LogMove(board, turn == 1 ? 1 : -1, move.x, move.y);
             turn = -turn;
         }
-        else if (Level == "Level 3") 
+        else if (Level == "Level 3")
         {
             // int movesCount = CountMoves();
             // int adaptiveDepth = Mathf.Clamp(5 + movesCount / 10, 5, 7);
             BotLevel1 bot = new BotLevel1(board, turn, startPosition, cellSize, xSprite, oSprite, 3);
             bot.MakeMove();
+            if (isLearned) LogMove(board, turn == 1 ? 1 : -1, bot.bestMove.x, bot.bestMove.y);
             turn = -turn;
         }
         else if (Level == "Level 2")
@@ -130,29 +147,42 @@ public class BotVSBot : MonoBehaviour
             Vector2 piecePosition = new Vector2(startPosition.x + move.x * cellSize, startPosition.y - move.y * cellSize);
             Instantiate(turn == 1 ? xSprite : oSprite, piecePosition, Quaternion.identity);
             board[move.x, move.y] = turn;
+            if (isLearned) LogMove(board, turn == 1 ? 1 : -1, move.x, move.y);
             turn = -turn;
         }
-        else BotDemo();   
+        else if (Level == "Level 4")
+        {
+            if (!dqnModelAsset) BotDemo();
+            else
+            {
+                Vector2Int move = dqnBot.PredictMove(boardState);
+                Vector2 pieceWorldPosition = new Vector2(startPosition.x + move.x * cellSize, startPosition.y - move.y * cellSize);
+                PlacePiece(pieceWorldPosition);
+                Debug.Log(turn);
+                
+            }
+        }
+        else BotDemo();
         
 
-        CheckWinCondition(); 
-        if (result != 0) 
+        CheckWinCondition();
+        if (result != 0)
         {
             PlayerPrefs.SetInt("Result", result);
             PlayerPrefs.Save(); // Lưu thay đổi ngay lập tức
             SceneManager.LoadScene("FinishedScene");
-            if (result > 0){
+            if (result > 0) {
                 Debug.Log("X is the Winner!");
                 Xbot.UpdateResult(Obot.botName, 1);
                 Obot.UpdateResult(Xbot.botName, -1);
             }
-                
-            else{
+
+            else {
                 Debug.Log("O is the Winner!");
                 Xbot.UpdateResult(Obot.botName, -1);
                 Obot.UpdateResult(Xbot.botName, 1);
             }
-                
+
             SaveBotToFile(Xbot);
             SaveBotToFile(Obot);
         }
@@ -170,6 +200,29 @@ public class BotVSBot : MonoBehaviour
                 SceneManager.LoadScene("FinishedScene");
             }
         }
+        if (isFinished) SaveMatchLog();
+    }
+
+    void LogMove(int[,] boardState, int player, int x, int y)
+    {
+        int[,] boardCopy = (int[,])boardState.Clone(); // tránh tham chiếu
+        MoveLog log = new MoveLog
+        {
+            board = boardCopy,
+            player = player,
+            x = x,
+            y = y
+        };
+        moveLogs.Add(log);
+    }
+    void SaveMatchLog()
+    {
+        int botRole = (Xbot.botName == "Level 4") ? 1 : -1;
+        int gameResult = result == 0 ? 0 : (result == botRole ? 1 : -1);
+        string json = JsonUtility.ToJson(new Wrapper { moves = moveLogs.ToArray(), botRole = botRole, gameResult = gameResult}, true);
+        string path = Application.dataPath + "/LearnData" + "/match_log_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".json";
+        System.IO.File.WriteAllText(path, json);
+        Debug.Log("Saved match log to: " + path);
     }
 
     void SaveBotToFile(Bot bot)
@@ -272,7 +325,8 @@ public class BotVSBot : MonoBehaviour
             // Đặt quân cờ
             GameObject piece = Instantiate(turn == 1 ? xSprite : oSprite, piecePosition, Quaternion.identity);
             board[move.x, move.y] = (turn == 1 ? 1 : -1);
-
+            Debug.Log(turn);
+            if (isLearned) LogMove(board, turn == 1 ? 1 : -1, move.x, move.y);
             // Đổi lượt
             turn = -turn;
         }
@@ -287,6 +341,7 @@ public class BotVSBot : MonoBehaviour
                 new Vector2(startPosition.x + xIndex * cellSize, startPosition.y - yIndex * cellSize), 
                 Quaternion.identity);
             board[xIndex, yIndex] = (turn == 1 ? 1 : -1);
+            if (isLearned) LogMove(board, turn == 1 ? 1 : -1, xIndex, yIndex);
             turn = -turn;
         }
     }
