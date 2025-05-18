@@ -648,6 +648,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dqnModelAsset: {fileID: 5022602860645237092, guid: 2c7cb0b206851db42bb769fb95710ab9, type: 3}
+  mlModelAsset: {fileID: 5022602860645237092, guid: e99e02017575ba2489783aeb28f626db, type: 3}
   level: {fileID: 0}
   xSprite: {fileID: 1856503120}
   oSprite: {fileID: 106200244}

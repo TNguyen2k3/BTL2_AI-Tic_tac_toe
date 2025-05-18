@@ -61,6 +61,8 @@ public class BotVSBot : MonoBehaviour
 {
     public NNModel dqnModelAsset;
     private DQNBot dqnBot;
+    private MLBot mlBot;
+    [SerializeField]public NNModel mlModelAsset;
     Bot Xbot;
     Bot Obot;
 
@@ -84,7 +86,10 @@ public class BotVSBot : MonoBehaviour
 
     void OnDestroy()
     {
-        dqnBot?.Dispose();
+        if (dqnBot != null)
+            dqnBot.Dispose();
+        if (mlBot != null)
+            mlBot.Dispose();
     }
     // Start is called before the first frame update
     void Start()
@@ -96,6 +101,11 @@ public class BotVSBot : MonoBehaviour
             isLearned = true;
             dqnBot = new DQNBot(dqnModelAsset);
         }
+        if (Xbot.botName == "Level 0" || Obot.botName == "Level 0")
+        {
+            isLearned = false;
+            mlBot = new MLBot(mlModelAsset);
+        }
         PlayerPrefs.SetString("Scene", SceneName);
         InitializeBoard();
 
@@ -103,10 +113,12 @@ public class BotVSBot : MonoBehaviour
         float random = Random.Range(0f, 1f);  // tránh lỗi Random.Range(int, int)
         turn = (random < 0.5f) ? -1 : 1;
     }
-
+    int count = 0;
     // Update is called once per frame
     void Update()
     {
+
+        int count = 0;
         string Level;
         if (turn == 1) Level = Xbot.botName;
         else Level = Obot.botName;
@@ -120,7 +132,7 @@ public class BotVSBot : MonoBehaviour
                 else boardState[index] = 0f;                         // Ô trống
             }
         }
-        
+
         if (Level == "Level 1")
         {
             IBotStrategy bot = new MinimaxBot((int)Random.Range(2, 3));
@@ -159,10 +171,35 @@ public class BotVSBot : MonoBehaviour
                 Vector2 pieceWorldPosition = new Vector2(startPosition.x + move.x * cellSize, startPosition.y - move.y * cellSize);
                 PlacePiece(pieceWorldPosition);
                 Debug.Log(turn);
-                
+
             }
         }
-        else BotDemo();
+        else
+        {
+             if (mlModelAsset == null)
+            {
+                Debug.LogWarning("DQN model not assigned. Using random move.");
+                BotDemo();
+            }
+            else
+            {
+                
+                // for (int i = 0; i < 9; i++)
+                // {
+                //     for (int j = 0; j < 9; j++)
+                //     {
+                //         if (board[i][j] != 0) count++;
+                //     }
+                // }
+                Vector2Int move = mlBot.PredictMove(boardState);
+                Debug.Log(move);
+                Vector2 piecePosition = new Vector2(
+                    startPosition.x + move.x * cellSize,
+                    startPosition.y - move.y * cellSize
+                );
+                PlacePiece(piecePosition);
+            }
+        }
         
 
         CheckWinCondition();
